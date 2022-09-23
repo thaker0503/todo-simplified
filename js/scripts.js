@@ -1,6 +1,8 @@
 const url = "http://localhost:3001/";
 const showTodo = document.getElementById('showTodo');
 const showTodoCompleted = document.getElementById('showTodoCompleted');
+let todoTitle = document.getElementById("todoTitle")
+let todoDescription = document.getElementById("todoDescription");
 let task = [];
 
 // const addTaskBtn = document.getElementById("addTask");
@@ -41,6 +43,7 @@ function addTaskToApi(e) {
             console.log(data)
             todoTitle.value = ""
             todoDescription.value = ""
+            todoTitle.focus();
             printTask(task)
         })
     }
