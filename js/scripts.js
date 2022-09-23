@@ -1,4 +1,4 @@
-const url = "http://localhost:3001/";
+const url = "http://localhost:3001/api/";
 const showTodo = document.getElementById('showTodo');
 const showTodoCompleted = document.getElementById('showTodoCompleted');
 let todoTitle = document.getElementById("todoTitle")
@@ -76,7 +76,7 @@ function checkFalse(id) {
 function checkTrue(id) {
     // console.log("Checking true")
     let index = task.findIndex(item => item.id == id)
-    console.log(index)
+    // console.log(index)
     fetch(url+id, {
         method: "PUT",
         headers: {
