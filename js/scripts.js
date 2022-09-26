@@ -1,6 +1,7 @@
 // import { addTaskToApi } from "./addTask.js";
 // import { printTask } from "./printTask.js"
-const url = "http://localhost:3001/api/";
+const url = "https://internapp.vercel.app/yatharth/todos/";
+// const url = "http://localhost:3001/api/";
 const showTodo = document.getElementById('showTodo');
 const showTodoCompleted = document.getElementById('showTodoCompleted');
 // const addTaskBtn = document.getElementById('addTask');
@@ -45,7 +46,8 @@ function addTaskToApi(e) {
                 completed: false
             })
         }).then(res => res.json()).then(data => {
-            task = data
+            task = [...task,data]
+            // task = data
             // console.log(task)
             todoTitle.value = ""
             todoDescription.value = ""
@@ -128,21 +130,22 @@ function printTask(task) {
 
     showTodo.innerHTML = ""
     showTodoCompleted.innerHTML = ""
+    // addAnimation();  
     task.forEach(data => {
         var title = changeHTML(data.title);
         var description = changeHTML(data.description);
         // console.log(typeof(title))
         // console.log(data.title)
         // console.log(data.description)
-        let listElement = `<li class="list" data-tooltip="Mark as completed">
-                        <input type='checkbox' id=${data.id}  data-completed="${data.completed}"/>
+        let listElement = `<li class="list" data-tooltip="Mark as completed"  >
+                        <input type='checkbox' id="${data.id}" data-completed="${data.completed}"/>
                         <div>
                             <h3> ${title}</h3>
                             <p> ${description} </p>
                         </div>
                         </li>`
-        let listElement2 = `<li class="list" data-tooltip="Mark as not completed">
-                        <input type='checkbox' id=${data.id}  data-completed="${data.completed}"  checked/>
+        let listElement2 = `<li class="list" data-tooltip="Mark as not completed" >
+                        <input type='checkbox'  id="${data.id}" data-completed="${data.completed}"  checked/>
                         <div>
                             <h3> ${title} </h3>
                             <p> ${description} </p>
@@ -181,6 +184,12 @@ function changeHTML(html) {
         .replace(/>/g, "&gt;");
 }
 
+function addAnimation() {
+    var index = task.findIndex(item => item.id == task[task.length - 1].id)
+    console.log(document.getElementById(`'${task[index].id}'`))
+    // imp.classList.add("animation")
+    // console.log(imp)
+}
 
 
 // function printNewTask(data) {
