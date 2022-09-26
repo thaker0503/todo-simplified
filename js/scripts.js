@@ -1,26 +1,31 @@
+// import { addTaskToApi } from "./addTask.js";
+// import { printTask } from "./printTask.js"
 const url = "http://localhost:3001/api/";
 const showTodo = document.getElementById('showTodo');
 const showTodoCompleted = document.getElementById('showTodoCompleted');
+// const addTaskBtn = document.getElementById('addTask');
 let todoTitle = document.getElementById("todoTitle")
 let todoDescription = document.getElementById("todoDescription");
+
 let task = [];
-
-// const addTaskBtn = document.getElementById("addTask");
-
-// import { addTaskToApi } from './addTask.js'
-
-// addTaskBtn.addEventListener("click", addTaskToApi(event))
 
 fetch(url).then(res => res.json()).then(data => {
     task = data;
+    isTaskEmpty()
+})
+
+function isTaskEmpty() {
     if (task != "") {
         printTask(task)
     } else {
         showTodo.innerHTML = "No Tasks"
         showTodoCompleted.innerHTML = "No Tasks"
     }
-})
+}
 
+// addTaskBtn.addEventListener("click", function (e) {
+//     addTaskToApi(url,e)
+// })
 
 function addTaskToApi(e) {
     e.preventDefault();
@@ -41,7 +46,7 @@ function addTaskToApi(e) {
             })
         }).then(res => res.json()).then(data => {
             task = data
-            console.log(task)
+            // console.log(task)
             todoTitle.value = ""
             todoDescription.value = ""
             todoTitle.focus();
@@ -107,53 +112,53 @@ function delTask(id) {
     })
         .then(res => res.json()).then(data => {
             // let index = task.findIndex(item => item.id === data.id)
-            console.log(index)
-            console.log(data)
+            // console.log(index)
+            // console.log(data)
             task.splice(index, 1)
             // task = data
             // console.log(task)
             printTask(task)
+            isTaskEmpty()
         })
 }
 
-
-
 function printTask(task) {
+    // console.log("Printing Task")
     // console.log(task)
 
     showTodo.innerHTML = ""
     showTodoCompleted.innerHTML = ""
     task.forEach(data => {
-        var title = data.title;
-        var description = data.description;
+        var title = changeHTML(data.title);
+        var description = changeHTML(data.description);
         // console.log(typeof(title))
         // console.log(data.title)
         // console.log(data.description)
         let listElement = `<li class="list" data-tooltip="Mark as completed">
                         <input type='checkbox' id=${data.id}  data-completed="${data.completed}"/>
                         <div>
-                            <h3> ${changeHTML(title)}</h3>
-                            <p> ${changeHTML(description)} </p>
+                            <h3> ${title}</h3>
+                            <p> ${description} </p>
                         </div>
                         </li>`
         let listElement2 = `<li class="list" data-tooltip="Mark as not completed">
                         <input type='checkbox' id=${data.id}  data-completed="${data.completed}"  checked/>
                         <div>
-                            <h3> ${changeHTML(data.title)} </h3>
-                            <p> ${changeHTML(data.description)} </p>
+                            <h3> ${title} </h3>
+                            <p> ${description} </p>
                         </div>
                         </li>`
         if (!data.completed) {
-            showTodo.innerHTML += listElement
+            showTodo.innerHTML += listElement;
         } else {
-            showTodoCompleted.innerHTML += listElement2
+            showTodoCompleted.innerHTML += listElement2;
         }
     });
     const list = document.querySelectorAll(".list");
     // const checkbox = document.querySelectorAll("input[type='checkbox']");
     // for (let i = 0; i < checkbox.length; i++) {
     //     checkbox[i].addEventListener("click", function () {
-            // this
+    // this
     //     }) 
     // }
     for (let i = 0; i < list.length; i++) {
@@ -161,11 +166,11 @@ function printTask(task) {
             this.children[0].getAttribute('data-completed') === 'true'
                 ? checkFalse(this.children[0].id)
                 : checkTrue(this.children[0].id)
-        }) 
+        })
         list[i].addEventListener("contextmenu", function (e) {
             e.preventDefault();
             delTask(this.children[0].id)
-        }) 
+        })
     }
 }
 
@@ -175,6 +180,8 @@ function changeHTML(html) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 }
+
+
 
 // function printNewTask(data) {
 
