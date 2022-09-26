@@ -25,6 +25,7 @@ fetch(url).then(res => res.json()).then(data => {
 function addTaskToApi(e) {
     e.preventDefault();
 
+
     if (todoTitle.value === "" || todoDescription.value === "" ) {
         alert("All fields Mandatory")
     } else {
@@ -40,7 +41,7 @@ function addTaskToApi(e) {
             })
         }).then(res => res.json()).then(data => {
             task = data
-            console.log(data)
+            console.log(task)
             todoTitle.value = ""
             todoDescription.value = ""
             todoTitle.focus();
@@ -96,6 +97,24 @@ function checkTrue(id) {
     })
 }
 
+function delTask(id) {
+    let index = task.findIndex(item => item.id == id)
+    fetch(url + id, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json()).then(data => {
+            // let index = task.findIndex(item => item.id === data.id)
+            console.log(index)
+            console.log(data)
+            task.splice(index, 1)
+            // task = data
+            // console.log(task)
+            printTask(task)
+        })
+}
 
 
 
@@ -105,20 +124,23 @@ function printTask(task) {
     showTodo.innerHTML = ""
     showTodoCompleted.innerHTML = ""
     task.forEach(data => {
+        var title = data.title;
+        var description = data.description;
+        // console.log(typeof(title))
         // console.log(data.title)
         // console.log(data.description)
         let listElement = `<li class="list" data-tooltip="Mark as completed">
                         <input type='checkbox' id=${data.id}  data-completed="${data.completed}"/>
                         <div>
-                            <h3> ${data.title}</h3>
-                            <p> ${data.description} </p>
+                            <h3> ${changeHTML(title)}</h3>
+                            <p> ${changeHTML(description)} </p>
                         </div>
                         </li>`
         let listElement2 = `<li class="list" data-tooltip="Mark as not completed">
                         <input type='checkbox' id=${data.id}  data-completed="${data.completed}"  checked/>
                         <div>
-                            <h3> ${data.title} </h3>
-                            <p> ${data.description} </p>
+                            <h3> ${changeHTML(data.title)} </h3>
+                            <p> ${changeHTML(data.description)} </p>
                         </div>
                         </li>`
         if (!data.completed) {
@@ -140,7 +162,18 @@ function printTask(task) {
                 ? checkFalse(this.children[0].id)
                 : checkTrue(this.children[0].id)
         }) 
+        list[i].addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+            delTask(this.children[0].id)
+        }) 
     }
+}
+
+function changeHTML(html) {
+    return html
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
 
 // function printNewTask(data) {
